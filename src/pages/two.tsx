@@ -1,10 +1,10 @@
-import type { InferGetStaticPropsType } from 'next';
+import type { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from 'styles/Home.module.css';
 
 // This gets called on every request
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   // Fetch data from external API
   const res = await fetch(`http://localhost:3000/api/hello`);
 
@@ -15,7 +15,9 @@ export const getStaticProps = async () => {
   );
 };
 
-const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => (
+const Home = ({
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => (
   <div className={styles.container}>
     <Head>
       <title>Create Next App</title>
@@ -24,8 +26,7 @@ const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => (
 
     <main className={styles.main}>
       <h1 className={styles.title}>
-        Hello World! <Link href="/two/">two</Link>{' '}
-        <Link href="/profile/">Profile</Link>
+        two <Link href="/">home</Link>
       </h1>
       <p>
         {
