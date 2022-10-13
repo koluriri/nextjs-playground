@@ -4,11 +4,12 @@ import Link from 'next/link';
 
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import app from 'utils/firebase';
-import { useAuthContext } from 'utils/authcontext';
+import useSWR from 'swr';
+import { UserType } from '~/hooks/use-auth';
 
 const SignIn = () => {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const { data: user } = useSWR<UserType>('user', null);
   const auth = getAuth(app);
   const isLoggedIn = !!user;
   const [email, setEmail] = useState('');
