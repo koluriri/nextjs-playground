@@ -12,9 +12,7 @@ export const useAuth = () => {
   const auth = getAuth(app);
   const { mutate: setUser } = useSWR<UserType>('user', null, {});
   const isAvailableForViewing =
-    router.pathname === '/about' ||
-    router.pathname === '/signin' ||
-    router.pathname === '/signup';
+    router.pathname === '/signin' || router.pathname === '/signup';
 
   useEffect(() => {
     const authStateChanged = onAuthStateChanged(auth, (authUser) => {
