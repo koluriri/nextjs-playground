@@ -18,7 +18,9 @@ const Profile = () => {
         .getIdToken(/* forceRefresh */ true)
         .then((idToken) => {
           axios
-            .post(`/api/hello?token=${idToken}`)
+            .put(`/api/hello`, {
+              token: idToken,
+            })
             .then((response) => {
               console.log(response.data);
             })

@@ -6,8 +6,19 @@ type Data = {
   name: string;
 };
 
-const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { query, method } = req;
+interface NextApiRequestWithBody extends NextApiRequest {
+  body: Partial<{
+    [key: string]: string | string[];
+  }>;
+}
+
+interface FirebaseResponseError {
+  code?: number | string;
+  message?: string;
+}
+
+const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
+  const { body, method } = req;
 
   let name = 'POST!';
   const checkRevoked = true;
@@ -19,16 +30,16 @@ const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
       break;
     case 'POST':
       // Update or create data in your database
-      if (query.token && typeof query.token === 'string') {
+      if (body.token && typeof body.token === 'string') {
         name = `token`;
         admin
           .auth()
-          .verifyIdToken(query.token, checkRevoked)
+          .verifyIdToken(body.token, checkRevoked)
           .then((decodedToken) => {
             const { uid } = decodedToken;
             name = `uid:${uid}`;
           })
-          .catch((error) => {
+          .catch((error: FirebaseResponseError) => {
             name = `error!!`;
             if (error?.code && error.code === 'auth/id-token-revoked') {
               // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
@@ -42,10 +53,14 @@ const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
       } else {
         name = `not token`;
       }
+
+      name = JSON.stringify(body);
+      res.status(200).json({ name });
       break;
     case 'PUT':
       // Update or create data in your database
-      res.status(200).json({ name: 'PUT!' });
+      name = JSON.stringify(body);
+      res.status(200).json({ name });
       break;
     case 'DELETE':
       // Update or create data in your database
