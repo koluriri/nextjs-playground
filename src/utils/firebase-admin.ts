@@ -1,5 +1,4 @@
 import admin from 'firebase-admin';
-
 import serviceAccount from './authenticationtestapp-f0762-firebase-adminsdk-59chq-37a01b69cb.json';
 
 if (admin.apps.length === 0) {

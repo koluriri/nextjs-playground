@@ -101,6 +101,7 @@ module.exports = {
         classPropertiesAllowed: false,
       },
     ],
+    '@typescript-eslint/no-misused-promises': ['off'],
   },
   overrides: [
     {

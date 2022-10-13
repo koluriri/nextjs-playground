@@ -10,6 +10,7 @@ const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { query, method } = req;
 
   let name = 'POST!';
+  const checkRevoked = true;
 
   switch (method) {
     case 'GET':
@@ -22,14 +23,18 @@ const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
         name = `token`;
         admin
           .auth()
-          .verifyIdToken(query.token)
+          .verifyIdToken(query.token, checkRevoked)
           .then((decodedToken) => {
             const { uid } = decodedToken;
             name = `uid:${uid}`;
           })
           .catch((error) => {
             name = `error!!`;
-            console.error(error);
+            if (error?.code && error.code === 'auth/id-token-revoked') {
+              // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
+            } else {
+              // Token is invalid.
+            }
           })
           .finally(() => {
             res.status(200).json({ name });
