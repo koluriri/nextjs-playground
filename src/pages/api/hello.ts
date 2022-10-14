@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { FirebaseError } from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import admin from '~/utils/firebase-admin';
+import admin from 'utils/firebase-admin';
 
 type Data = {
   name: string;
@@ -10,11 +11,6 @@ interface NextApiRequestWithBody extends NextApiRequest {
   body: Partial<{
     [key: string]: string | string[];
   }>;
-}
-
-interface FirebaseResponseError {
-  code?: number | string;
-  message?: string;
 }
 
 const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
@@ -39,7 +35,7 @@ const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
             const { uid } = decodedToken;
             name = `uid:${uid}`;
           })
-          .catch((error: FirebaseResponseError) => {
+          .catch((error: FirebaseError) => {
             name = `error!!`;
             if (error?.code && error.code === 'auth/id-token-revoked') {
               // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
