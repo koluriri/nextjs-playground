@@ -18,8 +18,11 @@ const Profile = () => {
         .getIdToken(/* forceRefresh */ true)
         .then((idToken) => {
           axios
-            .put(`/api/hello`, {
+            .post(`/api/hello`, {
               token: idToken,
+              email: 'aaa',
+              password: 'aaaa',
+              isAgreed: true,
             })
             .then((response) => {
               console.log(response.data);
