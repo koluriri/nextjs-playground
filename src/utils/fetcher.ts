@@ -1,19 +1,16 @@
 import axios, { AxiosError } from 'axios';
+import { Data } from '~/pages/api/hello';
 
-export type APIReturnData = {
-  name: string;
-};
-
-const isAPIReturnData = (data: any): data is APIReturnData =>
+const isAPIReturnData = (data: { [key: string]: any }): data is Data =>
+  !!data &&
   data !== null &&
-  'name' in data &&
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  typeof data === 'object' &&
   typeof data?.name === 'string';
 
-const fetcher = async (url: string): Promise<APIReturnData> =>
+const fetcher = async (url: string): Promise<any> =>
   axios
     .get(url)
-    .then((response) => {
+    .then((response: { data: { [key: string]: any } }) => {
       if (isAPIReturnData(response.data)) return response.data;
 
       return Error;

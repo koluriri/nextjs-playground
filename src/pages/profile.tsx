@@ -1,4 +1,4 @@
-import fetcher, { APIReturnData } from 'utils/fetcher';
+import fetcher from 'utils/fetcher';
 
 import useSWR from 'swr';
 import styles from 'styles/Home.module.css';
@@ -6,9 +6,10 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import app from '~/utils/firebase';
 import { getAuth } from 'firebase/auth';
+import { Data } from './api/hello';
 
 const Profile = () => {
-  const { data, error } = useSWR<APIReturnData, Error>(`/api/hello`, fetcher);
+  const { data, error } = useSWR<Data, Error>(`/api/hello`, fetcher);
 
   const auth = getAuth(app);
 

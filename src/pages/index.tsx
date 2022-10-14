@@ -1,4 +1,3 @@
-import type { InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from 'styles/Home.module.css';
@@ -6,19 +5,7 @@ import app from 'utils/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
 
-// This gets called on every request
-export const getStaticProps = async () => {
-  // Fetch data from external API
-  const res = await fetch(`http://localhost:3000/api/hello`);
-
-  return res.json().then((data: any) =>
-    // Pass data to the page via props
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    ({ props: { data } }),
-  );
-};
-
-const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home = () => {
   const router = useRouter();
   const auth = getAuth(app);
   const handleLogout = () => {
@@ -41,12 +28,7 @@ const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
           Hello World! <Link href="/two/">two</Link>{' '}
           <Link href="/profile/">Profile</Link>
         </h1>
-        <p>
-          {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            data?.name ?? 'Unknown'
-          }
-        </p>
+        <p>こんにちははじめてのNext.js</p>
         <p>
           <Link href="/signup">登録</Link>
           <Link href="/signin">ログイン</Link>

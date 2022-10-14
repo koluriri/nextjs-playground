@@ -6,7 +6,7 @@ import admin from 'utils/firebase-admin';
 import { regFormSchema } from 'utils/schema';
 import { ValidationError } from 'yup';
 
-type Data = {
+export type Data = {
   name?: string;
   message?: string;
 };

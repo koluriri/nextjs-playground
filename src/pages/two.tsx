@@ -1,23 +1,8 @@
-import type { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from 'styles/Home.module.css';
 
-// This gets called on every request
-export const getServerSideProps = async () => {
-  // Fetch data from external API
-  const res = await fetch(`http://localhost:3000/api/hello`);
-
-  return res.json().then((data: any) =>
-    // Pass data to the page via props
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    ({ props: { data } }),
-  );
-};
-
-const Home = ({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => (
+const Home = () => (
   <div className={styles.container}>
     <Head>
       <title>Create Next App</title>
@@ -28,12 +13,7 @@ const Home = ({
       <h1 className={styles.title}>
         two <Link href="/">home</Link>
       </h1>
-      <p>
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          data?.name ?? 'Unknown'
-        }
-      </p>
+      <p>おはようございますはじめてのNext.js</p>
     </main>
   </div>
 );
