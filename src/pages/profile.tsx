@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import app from '~/utils/firebase';
 import { getAuth } from 'firebase/auth';
-import { Data } from './api/hello';
+import { Data } from 'pages/api/hello';
 
 const Profile = () => {
   const { data, error } = useSWR<Data, Error>(`/api/hello`, fetcher);

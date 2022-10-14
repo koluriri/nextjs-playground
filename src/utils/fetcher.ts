@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { Data } from '~/pages/api/hello';
+import { Data } from 'pages/api/hello';
 
 const isAPIReturnData = (data: { [key: string]: any }): data is Data =>
   !!data &&
