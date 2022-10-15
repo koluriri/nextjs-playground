@@ -8,9 +8,9 @@ import app from 'utils/firebase';
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import { regFormSchema } from 'utils/schema';
-import type { RegFormSchema } from 'utils/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { regFormSchema } from 'utils/schema-zod';
+import type { RegFormSchema } from 'utils/schema-zod';
 import { FirebaseError } from 'firebase/app';
 
 const SignIn = () => {
@@ -31,7 +31,7 @@ const SignIn = () => {
       password: '',
       isAgreed: false,
     },
-    resolver: yupResolver(regFormSchema),
+    resolver: zodResolver(regFormSchema),
   });
 
   const onSubmit: SubmitHandler<RegFormSchema> = (data) => {

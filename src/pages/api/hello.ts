@@ -3,8 +3,8 @@ import { FirebaseError } from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import admin from 'utils/firebase-admin';
 
-import { regFormSchema } from 'utils/schema';
-import { ValidationError } from 'yup';
+import { regFormSchema } from 'utils/schema-zod';
+import { Json } from '~/utils/fetcher';
 
 export type Data = {
   name?: string;
@@ -12,9 +12,7 @@ export type Data = {
 };
 
 interface NextApiRequestWithBody extends NextApiRequest {
-  body: Partial<{
-    [key: string]: string | string[];
-  }>;
+  body: Json;
 }
 
 const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
@@ -29,37 +27,34 @@ const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
       res.status(200).json({ name: 'GET!' });
       break;
     case 'POST':
-      regFormSchema
-        .validate(body)
-        .then(() => {
-          // Update or create data in your database
-          if (body.token && typeof body.token === 'string') {
-            name = `token`;
-            admin
-              .auth()
-              .verifyIdToken(body.token, checkRevoked)
-              .then((decodedToken) => {
-                const { uid } = decodedToken;
-                name = `uid:${uid}`;
-              })
-              .catch((error: FirebaseError) => {
-                name = `error!!`;
-                if (error?.code && error.code === 'auth/id-token-revoked') {
-                  // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
-                } else {
-                  // Token is invalid.
-                }
-              })
-              .finally(() => {
-                res.status(200).json({ name });
-              });
-          } else {
-            name = `not token`;
-          }
-        })
-        .catch((error: ValidationError) => {
-          res.status(500).json({ message: error.message });
-        });
+      try {
+        const parsedBody = regFormSchema.parse(body);
+        if (parsedBody.token && typeof parsedBody.token === 'string') {
+          name = `token`;
+          admin
+            .auth()
+            .verifyIdToken(parsedBody.token, checkRevoked)
+            .then((decodedToken) => {
+              const { uid } = decodedToken;
+              name = `uid:${uid}`;
+            })
+            .catch((error: FirebaseError) => {
+              name = `error!!`;
+              if (error?.code && error.code === 'auth/id-token-revoked') {
+                // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
+              } else {
+                // Token is invalid.
+              }
+            })
+            .finally(() => {
+              res.status(200).json({ name });
+            });
+        } else {
+          name = `not token`;
+        }
+      } catch (error) {
+        res.status(200).json({ message: 'error' });
+      }
       break;
     case 'PUT':
       // Update or create data in your database

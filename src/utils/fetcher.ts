@@ -1,17 +1,15 @@
 import axios, { AxiosError } from 'axios';
-import { Data } from 'pages/api/hello';
+import { apiReturnSchema } from './api-return-schema';
 
-const isAPIReturnData = (data: { [key: string]: any }): data is Data =>
-  !!data &&
-  data !== null &&
-  typeof data === 'object' &&
-  typeof data?.name === 'string';
+type Literal = boolean | null | number | string;
+export type Json = Literal | { [key: string]: Json } | Json[];
 
 const fetcher = async (url: string): Promise<any> =>
   axios
     .get(url)
-    .then((response: { data: { [key: string]: any } }) => {
-      if (isAPIReturnData(response.data)) return response.data;
+    .then((response: { data: Json }) => {
+      if (apiReturnSchema.safeParse(response.data).success)
+        return response.data;
 
       return Error;
     })

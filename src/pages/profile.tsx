@@ -6,10 +6,10 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import app from '~/utils/firebase';
 import { getAuth } from 'firebase/auth';
-import { Data } from 'pages/api/hello';
+import { ApiReturnSchema } from '~/utils/api-return-schema';
 
 const Profile = () => {
-  const { data, error } = useSWR<Data, Error>(`/api/hello`, fetcher);
+  const { data, error } = useSWR<ApiReturnSchema, Error>(`/api/test`, fetcher);
 
   const auth = getAuth(app);
 
@@ -21,12 +21,13 @@ const Profile = () => {
           axios
             .post(`/api/hello`, {
               token: idToken,
-              email: 'aaa',
+              email: 'aaa@aaa.aaa',
               password: 'aaaa',
               isAgreed: true,
             })
-            .then((response) => {
+            .then((response: { data: ApiReturnSchema }) => {
               console.log(response.data);
+              if (response.data.name) alert(`${response.data.name}`);
             })
             .catch(() => {
               alert('error');

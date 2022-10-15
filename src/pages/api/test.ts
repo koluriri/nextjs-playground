@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { ApiReturnSchema } from '~/utils/api-return-schema';
 
-export type Data = {
-  message?: string;
-};
-
-const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const handler = (
+  req: NextApiRequest,
+  res: NextApiResponse<ApiReturnSchema>,
+) => {
   const { method } = req;
 
   switch (method) {
     case 'GET':
       // Get data from your database
-      res.status(200).json({ message: 'GET!' });
+      res.status(200).json({ name: 'API GET TEST' });
       break;
     default:
       res.setHeader('Allow', ['GET']);
