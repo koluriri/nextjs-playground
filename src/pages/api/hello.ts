@@ -16,7 +16,7 @@ interface NextApiRequestWithBody extends NextApiRequest {
 }
 
 const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
-  const { body, method } = req;
+  const { body, method, headers } = req;
 
   let name = 'POST!';
   const checkRevoked = true;
@@ -24,7 +24,7 @@ const handler = (req: NextApiRequestWithBody, res: NextApiResponse<Data>) => {
   switch (method) {
     case 'GET':
       // Get data from your database
-      res.status(200).json({ name: 'GET!' });
+      res.status(200).json({ name: JSON.stringify(headers.authorization) });
       break;
     case 'POST':
       try {
